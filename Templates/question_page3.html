@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Questions</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/bootstrap.css") }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css">
+    <style>
+        .container{
+            margin-top: 60px;
+            padding: 10px;
+        }
+        .same_line{
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+<header>
+    {% include "topnav.html" %}
+</header>
+        <div class="container h-100">
+            <div class="row h-100 justify-content-center align-items-center bg-white shadow rounded overflow-hidden" style="margin-bottom: 5px">
+                <div class="col-sm-1" style="text-align: center">
+                   <div>
+                           <a href="{{ url_for ("question_vote_up", question_id=question_id) }}">&#128077;</a>
+                   </div>
+                    <div>
+                        {{ question['vote_number'] }}
+                    </div>
+                   <div>
+                           <a href="{{ url_for ("question_vote_down", question_id=question_id) }}">&#128078;</a>
+                   </div>
+                </div>
+                <div class="col-sm-11">
+                    <div class="same_line">
+                        <h2 style="color: black; text-align: left; margin-left: 30px; margin-top: 10px; margin-bottom: 10px">{{ question['title'] }}</h2>
+                        <div class="btn-group" role="group">
+                            <form action="{{ url_for("question_delete", question_id=question_id) }}">
+                                <button style="alignment: right; margin-right: 10px; margin-top: 10px; margin-bottom: 10px" type="submit" class="btn btn-outline-primary" value="Submit change">Delete question</button>
+                            </form>
+                            <form action="{{ url_for("edit_question_get", question_id=question_id) }}">
+                                <button style="alignment: right; margin-right: 30px; margin-top: 10px; margin-bottom: 10px" type="submit" class="btn btn-outline-primary" value="Submit change">Edit question</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div>
+                        <h6 style="color: black; text-align: right; margin-right: 30px; margin-top: 10px; margin-bottom: 10px">Added by {{ username }}</h6>
+                    </div>
+                    <div class="btn-group">
+                        {% for element in tag %}
+                            {% if element != 'id' %}
+                                <p style="text-align: left; margin-left: 30px; margin-top: 10px">{{ element["name"] }}</p>
+                            {% endif %}
+                            <a style="text-align: left; margin-left: 5px; margin-top: 10px"href="{{ url_for("delete_tag", tag_id=element['id'], question_id=question_id) }}" >[X]</a>
+                        {% endfor%}
+                    </div>
+                    <div>
+                        <p style="color: black; text-align: left; font-size: large; margin-left: 30px; margin-top: 10px; margin-bottom: 10px">{{ question['message'] }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                    <div class="same_line">
+                        <div>
+                            <a style="text-align: left; margin_left: 30px" href="{{ url_for('static', filename='uploaded/' + question["image"]) }}">{{ question["image"] }}</a>
+                        </div>
+                        <div>
+                            <div class="btn-group" role="group">
+                                <form action="{{ url_for("add_user_answer_post", question_id=question_id) }}">
+                                    <button style="alignment: right; margin-right: 10px; margin-top: 10px; margin-bottom: 10px" type="submit" class="btn btn-outline-primary" value="Submit change">Add answer</button>
+                                </form>
+                                <form action="{{ url_for("add_tag_to_question", question_id=question_id) }}">
+                                    <button style="alignment: right; margin-right: 10px; margin-top: 10px; margin-bottom: 10px" type="submit" class="btn btn-outline-primary" value="Submit change">Add tag</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="row justify-content-end align-items-end" style="alignment: right">
+                {% for answer in answers %}
+                    <div class="row shadow rounded overflow-hidden">
+                        <div class="col-sm-1" style="text-align: center">
+                           <div>
+                               <a href="{{ url_for ("answer_vote_up", answer_id=answer['id'], question_id=question_id) }}">&#128077;</a>
+                           </div>
+                            <div>
+                                {{ answer['vote_number'] }}
+                            </div>
+                           <div>
+                               <a href="{{ url_for("answer_vote_down", answer_id=answer['id'], question_id=question_id) }}">&#128078;</a>
+                           </div>
+                        </div>
+                        <div class="col-sm-10">
+                            <div class="shadow rounded overflow-hidden" style="background-color: #ecedee; margin: 5px">
+                                <div class="same_line">
+                                {%  if answer['accepted'] == False %}
+                                    <p style="color: black; text-align: left; margin-left: 30px; margin-top: 10px; margin-bottom: 10px">{{ answer['message'] }}</p>
+                                {% else %}
+                                    <p style="color: darkblue; font-size: large; text-align: left; margin-left: 30px; margin-top: 10px; margin-bottom: 10px">{{ answer['message'] }}</p>
+                                {% endif %}
+                                    <div class="btn-group" role="group">
+                                         {% if question_user_id == session_user_id and nologin == False %}
+                                        <form action="{{ url_for('accept_answer', answer_id=answer['id'], question_id=question_id) }}">
+                                            <button style="alignment: right; margin-right: 10px; margin-top: 10px; margin-bottom: 10px" type="submit" class="btn btn-outline-primary" value="Submit change">ACCEPT</button>
+                                        </form>
+                                        {% endif %}
+                                        <form action="{{ url_for("delete_answer", answer_id=answer['id'], question_id=question_id) }}">
+                                            <button style="alignment: right; margin-right: 10px; margin-top: 10px; margin-bottom: 10px" type="submit" class="btn btn-outline-primary " value="Submit change">Delete</button>
+                                        </form>
+                                        <form action="{{ url_for("edit_answer_get", answer_id=answer['id'], question_id=question_id) }}">
+                                            <button style="alignment: right; margin-right: 30px; margin-top: 10px; margin-bottom: 10px" type="submit" class="btn btn-outline-primary" value="Submit change">Edit</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://sdnjs.cloudflare.com/ajax/libs/propper.js/1.14.7/umd/propper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+        <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
+        <script>
+            $('.Questions_list').DataTable({
+                order: [[3, 'desc']],
+                pagingType: 'full_numbers'
+            });
+        </script>
+</body>
+</html>

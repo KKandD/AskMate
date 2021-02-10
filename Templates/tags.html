@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Tags</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<style>
+    table {
+        width: 150px;
+    }
+    .center {
+        margin-left: auto;
+        margin-right: auto;
+}
+</style>
+<header>
+    {% include "topnav.html" %}
+</header>
+<table class= "center" border="1">
+    <tr>
+        <th><span>Tag</span></th>
+        <th><span>Amount of tag usage</span></th>
+    </tr>
+    <tbody>
+    {% for tag in tags_list %}
+        <tr>
+            <td style="text-align:center">
+                {{ tag["name"] }}
+            </td>
+            <td style="text-align:center">
+                {{ tag["amount_of_tag_usage"] }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

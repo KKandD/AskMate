@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Add an comment</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/bootstrap.css") }}">
+    <style>
+        body {
+            min-height: 100vh;
+            background-image: linear-gradient(to top,#30cfd0 0,#330867 100%);
+        }
+
+        .container{
+            margin-top: 60px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    {% include "topnav.html" %}
+</header>
+    {% if comment == None %}
+        <div class="container h-100">
+            <div class="row h-100 justify-content-center align-items-center">
+                <div class="col-10 col-md-8 col-lg-6">
+                    <div class="bg-white shadow rounded overflow-hidden">
+                        <h3 style="margin-top: 60px; text-align: center">Add new comment</h3>
+                        <form action="{{ url_for("add_comment_to_question", question_id=question_id) }}" method="post" enctype = "multipart/form-data">
+                            <div class="form-group col-md-6" style="margin: 30px auto 0px auto; alignment: center">
+                                <label for="message">Comment:</label><br>
+                                <textarea id="message" name="message" class="form-control" minlength="1" rows="3"></textarea>
+                            </div>
+                            <div class="text-center">
+                                <button style="alignment: center; margin-bottom: 60px; margin-top: 30px" type="submit" class="btn btn-outline-primary" value="Add comment">Add comment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="container h-100">
+            <div class="row h-100 justify-content-center align-items-center">
+                <div class="col-10 col-md-8 col-lg-6">
+                    <div class="bg-white shadow rounded overflow-hidden">
+                        <h3 style="margin-top: 60px; text-align: center">Edit comment</h3>
+                        <form action="{{ url_for("edit_comment_to_question_post", comment_id=comment['id'], question_id=question_id) }}" method="post" enctype = "multipart/form-data">
+                        <div class="form-group col-md-6" style="margin: 30px auto 0px auto; alignment: center">
+                                <label for="message">Comment:</label><br>
+                                <textarea id="message" name="message" class="form-control" minlength="1" rows="3">{{ comment['message'] }}</textarea>
+                            </div>
+                            <div class="text-center">
+                                <button style="alignment: center; margin-bottom: 60px; margin-top: 30px" type="submit" class="btn btn-outline-primary" value="Submit change">Submit change</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</body>
+</html>
+
+{##}
+{#   {% if comment == None %}#}
+{#    <h1>Add new comment</h1>#}
+{#    <form action="{{ url_for("add_comment_to_question", question_id=question_id) }}" method="post" enctype = "multipart/form-data">#}
+{#        <label for="message">Comment:</label><br>#}
+{#        <textarea id="message" name="message" minlength="1" maxlength="500"></textarea><br><br>#}
+{#        <br><br>#}
+{#        <input type="submit" value="Add comment">#}
+{#    </form>#}
+{#    {% else %}#}
+{#        <h1>Edit comment</h1>#}
+{#    <form action="{{ url_for("edit_comment_to_question_post", comment_id=comment['id'], question_id=question_id) }}" method="post" enctype = "multipart/form-data">#}
+{#        <label for="message">Comment:</label><br>#}
+{#        <textarea id="message" name="message" minlength="1" maxlength="500">{{ comment['message'] }}</textarea><br><br>#}
+{#        <br><br>#}
+{#        <input type="submit" value="Submit change">#}
+{#    </form>#}
+{#    {% endif %}#}

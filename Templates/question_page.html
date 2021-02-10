@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Chosen question</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<style>
+    table {
+        width: 100%;
+    }
+    .button {
+        display: block;
+        width: 115px;
+        height: 25px;
+        background: #4E9CAF;
+        padding: 10px;
+        text-align: center;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        line-height: 25px;
+    }
+    a:link {
+        text-decoration: none;
+    }
+
+    a:visited {
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    a:active {
+        text-decoration: underline;
+    }
+</style>
+    {% with search_phrase=search_phrase, request=request %}
+        {% include "topnav.html" %}
+    {% endwith %}
+
+<h1>Added by: {{ username }}</h1>
+    {% for element in tag %}
+        {% if element != 'id' %}
+            {{ element["name"] }}
+        {% endif %}
+        <a href="{{ url_for("delete_tag", tag_id=element['id'], question_id=question_id) }}" >[X]</a>
+    {% endfor%}
+<br><br>
+<table border="1">
+    <tbody>
+    {# {% for ques in question %} #}
+
+        <tr>
+            {% for element in question %}
+            {# {% for element in ques %} #}
+                <td>
+                {% if element != 'user_id' %}
+                    {% if element == "image" %}
+                        <a href="{{ url_for('static', filename='uploaded/' + question["image"]) }}">{{ question["image"] }}</a>
+                    {% else %}
+                        {# {{ ques.get(element) }} #}
+                        {{ question[element] }}
+                    {% endif %}
+                {% endif %}
+                </td>
+            {% endfor %}
+    {# {% endfor %} #}
+                <td>
+                    <a href="{{ url_for ("question_vote_up", question_id=question_id) }}">&#128077;</a>
+                </td>
+                <td>
+                    <a href="{{ url_for("question_vote_down", question_id=question_id) }}">&#128078;</a>
+                </td>
+                <td>
+                    <a href="{{ url_for("add_comment_to_question", question_id=question_id) }}">Add comment</a>
+                </td>
+        <tr/>
+
+    </tbody>
+</table>
+    {% for comment in comments %}
+        {% if comment['answer_id'] == None  %}
+        <p>
+
+        {% for element in comments_keys %}
+                <span>
+                    {% if element != '' %}
+                        {{ comment[element] }}
+                    {% endif %}
+        {% endfor %}
+                <a href="{{ url_for('edit_comment_to_question', comment_id=comment['id'], question_id=question_id) }}">EDIT</a>
+                <a href="{{ url_for("delete_comment", comment_id=comment['id'], question_id=question_id) }}">DELETE</a>
+                </span>
+        </p>
+        {% endif %}
+    {% endfor %}
+<br><br>
+<a href="{{ url_for("edit_question_get", question_id=question_id) }}">Edit question</a>
+<br><br>
+<a href="{{ url_for("add_tag_to_question", question_id=question_id) }}">Add tag</a>
+<br><br>
+<a href="{{ url_for("question_delete", question_id=question_id) }}">Delete question</a>
+<br>
+<h1>Answers</h1>
+<a href="{{ url_for("add_user_answer_post", question_id=question_id) }}">Add answer</a>
+<br>
+<br>
+
+<table border="1">
+    <thead>
+    <tr>
+        {% for element in answers_keys %}
+            {% if element == "message" or element == "image" %}
+                <th>
+                    {{ element }}
+                </th>
+            {% elif element == 'vote_number' %}
+                <th style="width: 3%">vote number</th>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for answer in answers %}
+        <tr>
+            {% for element in answers_keys %}
+                {% if element != "vote_number" %}
+                    {% if element == "message" %}
+                        {%  if answer['accepted'] == False %}
+                            <td style="text-align:center">{{ answer[element] }}</td>
+                        {% else %}
+                            <td bgcolor="aqua" style="text-align:center">{{ answer[element] }}</td>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            <td>
+                <a href="{{ url_for('static', filename='uploaded/' + answer["image"]) }}">{{ answer["image"] }}</a>
+            </td>
+            <td style="text-align:center">
+                {{ answer["vote_number"] }}
+            </td>
+            <td>
+                <a href="{{ url_for ("answer_vote_up", answer_id=answer['id'], question_id=question_id) }}">&#128077;</a>
+            </td>
+            <td>
+                <a href="{{ url_for("answer_vote_down", answer_id=answer['id'], question_id=question_id) }}">&#128078;</a>
+            </td>
+            <td>
+                <a href="{{ url_for("delete_answer", answer_id=answer['id'], question_id=question_id) }}">Delete answer</a>
+            </td>
+            <td>
+                <a href="{{ url_for("edit_answer_get",answer_id=answer['id'], question_id=question_id)}}">Edit answer</a>
+            </td>
+            <td>
+                <a href="{{ url_for("add_comment_to_answer", answer_id=answer['id'], question_id=question_id) }}">Add comment</a>
+            </td>
+            <td>
+                {% for comment in comments %}
+                    {% if comment['answer_id'] == answer['id']  %}
+                        <p>
+
+                            {% for element in comments_keys %}
+                                <span>
+                                    {% if element != '' %}
+                                        {{ comment[element] }}
+                                    {% endif %}
+                            {% endfor %}
+                                <a href="{{ url_for('edit_comment_to_answer', comment_id=comment['id'], answer_id=answer['id']) }}">EDIT</a>
+                                <a href="{{ url_for("delete_comment", comment_id=comment['id'], question_id=question_id) }}">DELETE</a>
+                                </span>
+                        </p>
+                    {% endif %}
+                {% endfor %}
+            </td>
+             <td>
+                {% if question_user_id == session_user_id and nologin == False %}
+
+                        <a class="button" href='{{ url_for('accept_answer', answer_id=answer['id'], question_id=question_id) }}'>ACCEPT</a>
+
+
+                {% endif %}
+             </td>
+    {% endfor %}
+        </tr>
+    </tbody>
+</table>
+<br><br>
+
+</body>
+</html>

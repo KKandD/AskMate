@@ -1,0 +1,24 @@
+
+    <div class="topnav">
+        <a {% if request.endpoint == "main_page" %} class="active" {% endif %} href="{{ url_for("main_page") }}"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+        <a {% if request.endpoint == "display_question" %} class="active" {% endif %} href="{{ url_for("display_question") }}"><i class="fa fa-list-ol" aria-hidden="true"></i>Questions</a>
+        <a {% if request.endpoint == "users" %} class="active" {% endif %} href="{{ url_for("users") }}">Users</a>
+        <a {% if request.endpoint == "display_tags" %} class="active" {% endif %} href="{{ url_for("display_tags") }}">Tags</a>
+        <a {% if request.endpoint == "about" %} class="active" {% endif %} href="{{ url_for("about") }}"><i class="fa fa-building" aria-hidden="true"></i>About</a>
+        {% if session.user_name %}
+            <div style="float: right">
+                <a {% if request.endpoint == "logout" %} class="active" {% endif %} href="/logout">Log out</a>
+                <a {% if request.endpoint == "user_page" %} class="active" {% endif %} href="{{ url_for("user_page", user_id = user_id) }}"><i class="fa fa-user-circle" aria-hidden="true"></i>{{ session.user_name }}</a>
+            </div>
+        {% else %}
+            <a style="float: right" {% if request.endpoint == "registration" %} class="active" {% endif %} href="{{ url_for("registration") }}">Register</a>
+            <a style="float: right" {% if request.endpoint == "login" %} class="active" {% endif %} href="{{ url_for("login") }}">LogIn</a>
+        {% endif %}
+        <div class="search-container">
+            <form action="{{ url_for("search_question", search_phrase=search_phrase) }}" method="GET">
+                <input type="text" placeholder="Search.." name="search_phrase">
+                <button type="submit" onClick="search()" id="search"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+    </div>
+

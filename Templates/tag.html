@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/bootstrap.css") }}">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background-image: linear-gradient(to top,#30cfd0 0,#330867 100%);
+        }
+
+        .container{
+            padding: 10px;
+        }
+    </style>
+</head>
+<body class="h-100">
+<header>
+    {% include "topnav.html" %}
+</header>
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-10 col-md-8 col-lg-6">
+                <div class="bg-white shadow rounded overflow-hidden ">
+                    <form class="form-example" action="{{ url_for("add_tag_to_question", question_id=question_id) }}" method="POST" enctype="multipart/form-data">
+                        <h1 style="text-align: center; margin-top: 60px">Add tag</h1>
+                        <br>
+
+                        <div class="form-group col-md-6" style="margin:auto">
+                            <label style="text-align: center" for="select-tag">Choose one of existing tags:</label>
+                            <select name="name_select" id="name_select" class="form-control username" >
+                                <option></option>
+                                {% for tag in tags %}
+                                    <option value="{{ tag["name"] }}">{{ tag["name"] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <br>
+
+                        <div class="form-group col-md-6" style="margin:auto">
+                            <label for="name">Or add new tag:</label>
+                            <input type="name" class="form-control" id="name" placeholder="New tag..." name="name">
+                        </div>
+
+                        <br>
+
+                        <div class="text-center">
+                            <button style="alignment: center; margin-bottom: 60px" type="submit" class="btn btn-outline-primary" value="Login">Add tag</button>
+                            <label name="message">{{ message }}</label>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
+{#    <title>Add an comment</title>#}
+{#    <link rel="stylesheet" href="/static/style.css">#}
+{#</head>#}
+{#<body>#}
+{#    {% with search_phrase=search_phrase, request=request %}#}
+{#        {% include "topnav.html" %}#}
+{#    {% endwith %}#}
+{##}
+{#    <h1>Add tag</h1>#}
+{#    <form action="{{ url_for("add_tag_to_question", question_id=question_id) }}" method="post" enctype = "multipart/form-data">#}
+{#        <label for="name_select">Choose one of existing tags:</label><br>#}
+{#        <select id="name_select" name="name_select">#}
+{#            <option></option>#}
+{#            {% for tag in tags %}#}
+{#                <option value="{{ tag["name"] }}">{{ tag["name"] }}</option>#}
+{#            {% endfor %}#}
+{#        </select><br><br>#}
+{#        <label for="name">Or add new tag:</label><br>#}
+{#        <textarea id="tag" name="name" minlength="1" maxlength="20"></textarea><br><br>#}
+{#        <br><br>#}
+{#        <input type="submit" value="Add tag">#}
+{#        <label name="message">{{ message }}</label>#}
+{#    </form>#}
+{##}
+{#</body>#}
+{#</html>#}
+{##}

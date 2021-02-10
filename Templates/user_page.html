@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/bootstrap.css") }}">
+    <style>
+        body{
+            background:#FAFAFA;
+        }
+        .order-card {
+            color: #fff;
+        }
+
+        .bg-c-blue {
+            background: linear-gradient(45deg,#4099ff,#73b4ff);
+        }
+
+        .bg-c-green {
+            background: linear-gradient(45deg,#2ed8b6,#59e0c5);
+        }
+
+        .bg-c-yellow {
+            background: linear-gradient(45deg,#FFB64D,#ffcb80);
+        }
+
+        .bg-c-pink {
+            background: linear-gradient(45deg,#FF5370,#ff869a);
+        }
+
+
+        .card {
+            text-align: center;
+            margin-top: 60px;
+            border-radius: 5px;
+            -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+            box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+            border: none;
+            margin-bottom: 30px;
+            -webkit-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .card .card-block {
+            padding: 25px;
+        }
+
+        .order-card i {
+            font-size: 26px;
+        }
+
+
+        .profile-header {
+            transform: translateY(5rem);
+        }
+
+        body {
+            min-height: 100vh;
+            background-image: linear-gradient(to top,#30cfd0 0,#330867 100%);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        {% include "topnav.html" %}
+    </header>
+{#    <div class="row py-5 px-4">#}
+        <div class="col-xl-6 col-md-8 col-sm-12 mx-auto">
+            <div class="bg-white shadow rounded overflow-hidden">
+                <div class="px-4 pt-0 pb-4 bg-dark">
+                    <div class="media align-items-end profile-header">
+                        <div class="profile mr-3"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="..." width="130" class="rounded mb-2 img-thumbnail"></div>
+                        <div class="media-body mb-5 text-white">
+                            <h4 class="mt-0 mb-0">{{ session.user_name }}</h4>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="py-4 px-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="mb-0">User information</h5>
+                    </div>
+
+            {% for data in user_data %}
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card bg-c-blue order-card">
+                            <div class="card-block">
+                                <h6 class="m-b-20">QUESTIONS</h6>
+                                <h2 class="text-right"><span>{{ data['count_of_asked_questions'] }}</span></h2>
+                                <i class="fa fa-question" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card bg-c-yellow order-card">
+                            <div class="card-block">
+                                <h6 class="m-b-20">ANSWERS</h6>
+                                <h2 class="text-right"><span>{{ data['count_of_answers'] }}</span></h2>
+                                <i class="fa fa-refresh"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card bg-c-pink order-card">
+                            <div class="card-block">
+                                <h6 class="m-b-20">COMMENTS</h6>
+                                <h2 class="text-right"><span>{{ data['count_of_comments'] }}</span></h2>
+                                <i class="fa fa-comments" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8" style="margin:auto">
+                        <div class="card bg-c-green order-card">
+                            <div class="card-block">
+                                <h6 class="m-b-20">REPUTATION</h6>
+                                <h2 class="text-right"><span>{{ data['reputation'] }}</span></h2>
+                                <i class="fa fa-rocket"></i>
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %}
+
+                </div>
+            </div>
+        </div>
+            {% for question in user_questions %}
+            <div class="list-group">
+                <a href="{{ url_for("question_page", question_id=question["id"]) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ question['title'] }}</h5>
+                        <small>{{ question['submission_time'] }}</small>
+                    </div>
+                        <p class="mb-1">{{ question['message'] }}</p>
+                        <small style="margin-right: 30px"><i class="fa fa-eye" aria-hidden="true" style="margin-right: 5px"></i>{{ question['view_number'] }}</small>
+                        <small {% if question['vote_number'] >= 0 %} style="color: green" {% else %} style="color: red" {% endif %}><i class="fa fa-balance-scale" aria-hidden="true" style="margin-right: 5px"></i>{{ question['vote_number'] }}</small>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+{#</div>#}
+
+</body>
+</html>
